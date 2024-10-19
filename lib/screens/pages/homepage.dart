@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:shoreguard/oceanmap.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +11,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  static int score = 5; // from Ai Model
+  var conditionDetails = oceanConditionMap[score];
+  List suitableActivity = oceanConditionMap[score]!['suitableActivities'];
   late GifController controller;
 
   @override
@@ -35,11 +39,12 @@ class _HomePageState extends State<HomePage>
         Positioned.fill(
           child: Gif(
             controller: controller,
-            image: const AssetImage("assets/Gif/level7.gif"),
+            image: AssetImage(conditionDetails!['backgroundGifPath'] as String),
             fit: BoxFit.cover,
           ),
         ),
         // Overlay with semi-transparent background for readability
+
         Container(
           color: Colors.black.withOpacity(0.5),
         ),
@@ -66,20 +71,23 @@ class _HomePageState extends State<HomePage>
                   padding: EdgeInsets.all(16),
                   children: [
                     _buildCard(
-                      'Suitability Score:',
+                      'Ocean Condition Score:',
                       child: Column(
                         children: [
                           SizedBox(height: 8),
                           LinearProgressIndicator(
-                            value: 0.8,
+                            value: score * 0.2,
                             backgroundColor: Colors.grey[300],
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.green),
+                            valueColor: AlwaysStoppedAnimation<Color>(score > 3
+                                ? Colors.green
+                                : score > 1
+                                    ? Colors.yellow
+                                    : Colors.red),
                           ),
                           SizedBox(height: 8),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text('4/5',
+                            child: Text('$score/5',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
@@ -88,14 +96,23 @@ class _HomePageState extends State<HomePage>
                     ),
                     SizedBox(height: 16),
                     _buildCard(
-                      'Categorical Suitability:',
-                      child: Text('Moderately Suitable',
-                          style: TextStyle(fontSize: 16)),
-                    ),
-                    SizedBox(height: 16),
-                    _buildCard(
                       'Activity-specific Suitability:',
-                      child: Text('Swimming', style: TextStyle(fontSize: 16)),
+                      child: SizedBox(
+                        height: suitableActivity.length.toDouble() * 30,
+                        child: ListView.builder(
+                          itemCount: suitableActivity.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6),
+                              child: Text(
+                                "- ${suitableActivity[index]}",
+                                style: TextStyle(fontSize: 17),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),
