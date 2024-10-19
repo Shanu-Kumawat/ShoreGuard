@@ -12,14 +12,10 @@ class AlertsPage extends StatelessWidget {
         child: ListView.builder(
           itemCount: 10, // Replace with the actual number of items
           itemBuilder: (context, index) {
-            return Container(
-              color: Colors.black,
-              child:CardTile()
-            );
+            return Container(color: Colors.black, child: CardTile());
           },
         ),
       ),
     );
   }
 }
-

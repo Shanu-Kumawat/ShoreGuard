@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import 'package:shoreguard/oceanmap.dart';
+import 'package:shoreguard/widgets/ocean_score.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  static int score = 5; // from Ai Model
+  static int score = OceanScore.score; // from Ai Model
   var conditionDetails = oceanConditionMap[score];
   List suitableActivity = oceanConditionMap[score]!['suitableActivities'];
   late GifController controller;
