@@ -12,7 +12,7 @@ class AlertsPage extends StatelessWidget {
           itemCount: 10, // Replace with the actual number of items
           itemBuilder: (context, index) {
             return Container(
-              color: Colors.white,
+              color: Colors.grey,
               child: ListTile(
                 title: Text(
                   'Enjoy Your Day!',
@@ -22,7 +22,8 @@ class AlertsPage extends StatelessWidget {
                   'Suitable activities: Swimming, Rafting,BEach Volleyball',
                   style: TextStyle(color: Colors.white70),
                 ),
-                leading: Icon(Icons.notification_important, color: Colors.white),
+                leading:
+                    Icon(Icons.notification_important, color: Colors.white),
                 // onTap: () {
                 //   // Handle tap on alert item
                 //   print('Tapped on Alert ${index + 1}');
@@ -35,3 +36,4 @@ class AlertsPage extends StatelessWidget {
     );
   }
 }
+

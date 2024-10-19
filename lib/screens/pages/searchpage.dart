@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shoreguard/Map/services.dart';
 
 class SearchPage extends StatefulWidget {
@@ -12,7 +14,9 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Beach> _searchResults = [];
   bool _isLoading = false;
-  final BeachService _beachService = BeachService();
+  final OpenStreetMapService _mapService = OpenStreetMapService();
+  final MapController _mapController = MapController();
+  List<Marker> _markers = [];
 
   @override
   void dispose() {
@@ -21,101 +25,104 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _performSearch(String query) async {
-    // Set loading state
     setState(() {
       _isLoading = true;
     });
 
-    // TODO: Implement your Map API call here
-    // This is where you would make a call to your chosen Map API
-    // For example, if using Google Places API:
-    // final results = await GoogleMapsService.searchPlaces(query);
-    // Simulating API call with a delay
-    //await Future.delayed(const Duration(seconds: 1));
-
-    // TODO: Parse the API response and update _searchResults
-    // This is just a placeholder. Replace with actual API data
-    //_searchResults = [
-    //  {'name': 'Sample Location 1', 'address': '123 Main St'},
-    //  {'name': 'Sample Location 2', 'address': '456 Elm St'},
-    //];
     try {
-      print("Calling API...");
-      _searchResults = await _beachService.searchBeaches(query);
-      print(_searchResults);
+      _searchResults = await _mapService.searchBeaches(query);
+      _updateMapMarkers();
+      if (_searchResults.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No beaches found for "$query"')),
+        );
+      }
     } catch (e) {
-      // Handle error
       print('Error searching beaches: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error searching beaches: ${e.toString()}')),
+      );
     }
-    // Update UI
+
     setState(() {
       _isLoading = false;
     });
   }
 
+  void _updateMapMarkers() {
+    _markers = _searchResults
+        .map((beach) => Marker(
+              child: Icon(Icons.location_on, color: Colors.red),
+              width: 80.0,
+              height: 80.0,
+              point: beach.location,
+            ))
+        .toList();
+
+    if (_searchResults.isNotEmpty) {
+      _mapController.move(_searchResults[0].location, 10.0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[900],
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search for a location...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchResults.clear();
-                          });
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.blue, width: 2),
-                ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search for a beach...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          _searchResults.clear();
+                          _markers.clear();
+                        });
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  _performSearch(value);
-                } else {
-                  setState(() {
-                    _searchResults.clear();
-                  });
-                }
-              },
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue, width: 2),
+              ),
             ),
+            onSubmitted: (value) {
+              if (value.isNotEmpty) {
+                _performSearch(value);
+              }
+            },
           ),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: _searchResults.length,
-                    itemBuilder: (context, index) {
-                      final beach = _searchResults[index];
-                      return ListTile(
-                        leading: Icon(Icons.beach_access, color: Colors.blue),
-                        title: Text(beach.name),
-                        subtitle: Text('Lat: ${beach.lat}, Lon: ${beach.lon}'),
-                        onTap: () {
-                          // Handle beach selection
-                        },
-                      );
-                    },
+        ),
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter: LatLng(0, 0),
+                    initialZoom: 2,
                   ),
-          ),
-        ],
-      ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: ['a', 'b', 'c'],
+                    ),
+                    MarkerLayer(markers: _markers),
+                  ],
+                ),
+        ),
+      ],
     );
   }
 }
+
