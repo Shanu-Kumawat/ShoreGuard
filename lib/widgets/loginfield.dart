@@ -33,7 +33,7 @@ class Loginfield extends StatelessWidget {
           ),
           hintText: hintText,
           hintStyle: TextStyle(
-            color: Colors.black
+            color: Colors.white
           )
         ),
       ),

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shoreguard/palette.dart';
 
 class GradientButton extends StatelessWidget {
-  const GradientButton({Key? key}) : super(key: key);
+  final VoidCallback onTap; // Accepts a function callback for button press
+
+  const GradientButton({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class GradientButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(7),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onTap, // Calls the passed function when pressed
         style: ElevatedButton.styleFrom(
           fixedSize: const Size(395, 55),
           backgroundColor: Colors.transparent,
@@ -38,3 +40,4 @@ class GradientButton extends StatelessWidget {
     );
   }
 }
+

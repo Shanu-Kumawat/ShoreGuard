@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoreguard/homescreen.dart';
 import 'package:shoreguard/widgets/gradient_button.dart';
 import 'package:shoreguard/widgets/loginfield.dart';
 import 'package:shoreguard/widgets/social_button.dart';
@@ -10,7 +11,7 @@ class Signupscreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -20,7 +21,7 @@ class Signupscreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 40), // Add some top padding
                   Image.asset(
-                    'assets/Image.jpg',
+                    'assets/images/REvan_logo-01.png',
                     height: 250, // Adjust the height as needed
                     fit: BoxFit.contain,
                   ),
@@ -30,7 +31,7 @@ class Signupscreen extends StatelessWidget {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
-                        color: Colors.black
+                        color: Colors.white
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -56,7 +57,12 @@ class Signupscreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   const Loginfield(hintText: 'Password'),
                   const SizedBox(height: 20),
-                  const GradientButton(),
+                  GradientButton(onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()));
+                  },),
                   const SizedBox(height: 40)
                 ],
               ),
