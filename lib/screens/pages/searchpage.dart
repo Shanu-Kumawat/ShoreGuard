@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shoreguard/Map/services.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -10,8 +10,9 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> _searchResults = [];
+  List<Beach> _searchResults = [];
   bool _isLoading = false;
+  final BeachService _beachService = BeachService();
 
   @override
   void dispose() {
@@ -29,17 +30,23 @@ class _SearchPageState extends State<SearchPage> {
     // This is where you would make a call to your chosen Map API
     // For example, if using Google Places API:
     // final results = await GoogleMapsService.searchPlaces(query);
-
     // Simulating API call with a delay
-    await Future.delayed(const Duration(seconds: 1));
+    //await Future.delayed(const Duration(seconds: 1));
 
     // TODO: Parse the API response and update _searchResults
     // This is just a placeholder. Replace with actual API data
-    _searchResults = [
-      {'name': 'Sample Location 1', 'address': '123 Main St'},
-      {'name': 'Sample Location 2', 'address': '456 Elm St'},
-    ];
-
+    //_searchResults = [
+    //  {'name': 'Sample Location 1', 'address': '123 Main St'},
+    //  {'name': 'Sample Location 2', 'address': '456 Elm St'},
+    //];
+    try {
+      print("Calling API...");
+      _searchResults = await _beachService.searchBeaches(query);
+      print(_searchResults);
+    } catch (e) {
+      // Handle error
+      print('Error searching beaches: $e');
+    }
     // Update UI
     setState(() {
       _isLoading = false;
@@ -95,15 +102,13 @@ class _SearchPageState extends State<SearchPage> {
                 : ListView.builder(
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {
-                      final result = _searchResults[index];
+                      final beach = _searchResults[index];
                       return ListTile(
-                        leading:
-                            const Icon(Icons.location_on, color: Colors.blue),
-                        title: Text(result['name']),
-                        subtitle: Text(result['address']),
+                        leading: Icon(Icons.beach_access, color: Colors.blue),
+                        title: Text(beach.name),
+                        subtitle: Text('Lat: ${beach.lat}, Lon: ${beach.lon}'),
                         onTap: () {
-                          // TODO: Handle location selection
-                          print('Selected: ${result['name']}');
+                          // Handle beach selection
                         },
                       );
                     },
