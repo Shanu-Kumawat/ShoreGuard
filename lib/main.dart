@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shoreguard/palette.dart';
-import 'package:shoreguard/loginscreen.dart';
-import 'package:shoreguard/signupscreen.dart';
+import 'package:shoreguard/screens/loginscreen.dart';
 
 void main() {
   runApp(const MyApp());
