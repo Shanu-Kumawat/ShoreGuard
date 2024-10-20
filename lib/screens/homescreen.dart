@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-  Position? _currentPosition;
   String locationError = "";
 
   final List<Widget> _page = [
@@ -35,56 +34,34 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchCurrentLocationAndData() async {
     try {
       Position? position = await _getCurrentLocation();
-      setState(() {
-        _currentPosition = position;
-      });
       if (position != null) {
         final oceanData =
             OceeanInfo(lat: position.latitude, long: position.longitude);
+        print("${position.latitude} ${position.longitude} ");
         Map fetchData =
             await oceanData.fetchData(); // Fetch ocean data based on location
-        double waveHeight = fetchData["current"]["wave_height"];
-        double swellWaveHeight = fetchData["current"]["swell_wave_height"];
-        double windWaveHeight = fetchData["current"]["wind_wave_height"];
-        double oceanCurrentVelocity =
-            fetchData["current"]["ocean_current_velocity"];
-        OceanScore.score = calculateOceanConditionScore(
-            waveHeight: waveHeight,
-            swellWaveHeight: swellWaveHeight,
-            windWaveHeight: windWaveHeight,
-            oceanCurrentVelocity: oceanCurrentVelocity);
+        print(fetchData);
+        if (fetchData["current"]["wave_height"] != null) {
+          double waveHeight = await fetchData["current"]["wave_height"];
+          double swellWaveHeight =
+              await fetchData["current"]["swell_wave_height"];
+          double windWaveHeight =
+              await fetchData["current"]["wind_wave_height"];
+          double oceanCurrentVelocity =
+              await fetchData["current"]["ocean_current_velocity"];
+          print("inside not null if and before calculateOceanConditionScore");
+          OceanScore.score = await calculateOceanConditionScore(
+              waveHeight: waveHeight,
+              swellWaveHeight: swellWaveHeight,
+              windWaveHeight: windWaveHeight,
+              oceanCurrentVelocity: oceanCurrentVelocity);
+        }
+
+        print("all done");
       }
     } catch (e) {
-      _showLocationPermissionDialog(
-          e.toString()); // Show a dialog in case of errors
+      print(e);
     }
-  }
-
-  // Function to show a popup dialog requesting location access
-  Future<void> _showLocationPermissionDialog(String errorMessage) async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Location Permission Required'),
-          content: Text(
-              'This app requires location access to provide relevant data. Please allow location access. Error: $errorMessage'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), // Close dialog
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(); // Close dialog
-                await _fetchCurrentLocationAndData(); // Retry permission request
-              },
-              child: Text('Allow'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
