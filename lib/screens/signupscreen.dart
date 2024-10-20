@@ -19,6 +19,7 @@ class _SignupscreenState extends State<Signupscreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool _isHovered = false;
 
   @override
   void dispose() {
@@ -72,23 +73,48 @@ class _SignupscreenState extends State<Signupscreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Email',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Password',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
                     ),
                     obscureText: true,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () async {
                       try {
@@ -108,14 +134,39 @@ class _SignupscreenState extends State<Signupscreen> {
                         );
                       }
                     },
-                    child: const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
+                    child: MouseRegion(
+                      onEnter: (_) => setState(() {
+                        _isHovered = true;
+                      }),
+                      onExit: (_) => setState(() {
+                        _isHovered = false;
+                      }),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: _isHovered
+                              ? Border.all(color: Colors.blue, width: 2) // Border color and width on hover
+                              : null,
+                          borderRadius: BorderRadius.circular(8), // Optional: round the corners
+                        ),
+                        padding: const EdgeInsets.all(8), // Optional: padding around the text
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [Colors.blue, Colors.purple], // Define your gradient colors here
+                            tileMode: TileMode.mirror,
+                          ).createShader(bounds),
+                          child: const Text(
+                            "Let's Rescue",
+                            style: TextStyle(
+                              fontSize: 24, // Increased font size
+                              fontWeight: FontWeight.bold, // Made text bold
+                              color: Colors.white, // This color won't be visible due to ShaderMask
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20,),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context, LoginScreen.route());

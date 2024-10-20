@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shoreguard/palette.dart';
 import 'package:shoreguard/screens/homescreen.dart';
 import 'package:shoreguard/screens/loginscreen.dart';
+import 'package:shoreguard/screens/signupscreen.dart';
 
 import 'firebase_options.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.data != null) {
             return const HomeScreen();
           }
-          return const LoginScreen();
+          return const Signupscreen();
         },
       ),
     );

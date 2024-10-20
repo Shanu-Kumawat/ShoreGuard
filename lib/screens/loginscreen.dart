@@ -72,23 +72,49 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 35,
                       color: Colors.white),
                 ),
-               
-                const SizedBox(height: 15),
+
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Email',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15),
                 TextFormField(
                   controller: passwordController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Password',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
                   ),
                   obscureText: true,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () async {
                     try {
@@ -106,14 +132,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }
                   },
-                  child: const Text(
-                    'SIGN IN',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [Colors.blue, Colors.purple], // Define your gradient colors here
+                        tileMode: TileMode.mirror,
+                      ).createShader(bounds),
+                      child: const Text(
+                        "Let's Rescue",
+                        style: TextStyle(
+                          fontSize: 24, // Increased font size
+                          fontWeight: FontWeight.bold, // Made text bold
+                          color: Colors.white, // This color won't be visible due to ShaderMask
+                        ),
+                      ),
+                    )
                 ),
+                const SizedBox(height: 20,),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushReplacement(
