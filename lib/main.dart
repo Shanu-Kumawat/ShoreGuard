@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shoreguard/palette.dart';
 import 'package:shoreguard/screens/homescreen.dart';
 import 'package:shoreguard/screens/loginscreen.dart';
+import 'package:shoreguard/widgets/splash_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -27,20 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Palette.backgroundColor,
       ),
-      home:  StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.data != null) {
-            return const HomeScreen();
-          }
-          return const LoginScreen();
-        },
-      ),
+      home:  const SplashScreen()
     );
   }
 }
