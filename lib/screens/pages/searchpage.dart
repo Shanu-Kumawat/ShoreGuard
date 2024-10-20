@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 import 'package:shoreguard/Map/services.dart';
 
 class SearchPage extends StatefulWidget {
@@ -10,6 +11,39 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
+class SearchState extends ChangeNotifier {
+  String _searchQuery = '';
+  List<Beach> _searchResults = [];
+  LatLng _mapCenter = LatLng(0, 0);
+  double _mapZoom = 2.0;
+
+  String get searchQuery => _searchQuery;
+  List<Beach> get searchResults => _searchResults;
+  LatLng get mapCenter => _mapCenter;
+  double get mapZoom => _mapZoom;
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void setSearchResults(List<Beach> results) {
+    _searchResults = results;
+    if (results.isNotEmpty) {
+      _mapCenter = results[0].location;
+      _mapZoom = 10.0;
+    }
+    notifyListeners();
+  }
+
+  void setMapPosition(LatLng center, double zoom) {
+    _mapCenter = center;
+    _mapZoom = zoom;
+    notifyListeners();
+  }
+}
+
+
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Beach> _searchResults = [];
@@ -17,6 +51,17 @@ class _SearchPageState extends State<SearchPage> {
   final OpenStreetMapService _mapService = OpenStreetMapService();
   final MapController _mapController = MapController();
   List<Marker> _markers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final searchState = Provider.of<SearchState>(context, listen: false);
+      _searchController.text = searchState.searchQuery;
+      _updateMapMarkers();
+      _mapController.move(searchState.mapCenter, searchState.mapZoom);
+    });
+  }
 
   @override
   void dispose() {
@@ -30,9 +75,10 @@ class _SearchPageState extends State<SearchPage> {
     });
 
     try {
-      _searchResults = await _mapService.searchBeaches(query);
+      final results = await _mapService.searchBeaches(query);
+      Provider.of<SearchState>(context, listen: false).setSearchResults(results);
       _updateMapMarkers();
-      if (_searchResults.isEmpty) {
+      if (results.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('No beaches found for "$query"')),
         );
@@ -50,28 +96,36 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _updateMapMarkers() {
-    _markers = _searchResults
+    final searchState = Provider.of<SearchState>(context, listen: false);
+    _markers = searchState.searchResults
         .map((beach) => Marker(
-              child: Icon(Icons.location_on, color: Colors.red),
-              width: 80.0,
-              height: 80.0,
-              point: beach.location,
-            ))
+      child: Icon(Icons.location_on, color: Colors.red),
+      width: 80.0,
+      height: 80.0,
+      point: beach.location,
+    ))
         .toList();
 
-    if (_searchResults.isNotEmpty) {
-      _mapController.move(_searchResults[0].location, 10.0);
+    if (searchState.searchResults.isNotEmpty) {
+      _mapController.move(searchState.mapCenter, searchState.mapZoom);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final searchState = Provider.of<SearchState>(context);
+
+    _searchController.text = searchState.searchQuery;
+
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: _searchController,
+            onChanged: (value) {
+              searchState.setSearchQuery(value);
+            },
             style: TextStyle(
               color: Colors.black
             ),
@@ -109,20 +163,28 @@ class _SearchPageState extends State<SearchPage> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : FlutterMap(
-                  mapController: _mapController,
-                  options: MapOptions(
-                    initialCenter: LatLng(0, 0),
-                    initialZoom: 2,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                    ),
-                    MarkerLayer(markers: _markers),
-                  ],
-                ),
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: searchState.mapCenter,
+              initialZoom: searchState.mapZoom,
+              onPositionChanged: (position, hasGesture) {
+                if (hasGesture) {
+                  searchState.setMapPosition(
+                    position.center!,
+                    position.zoom!,
+                  );
+                }
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+              ),
+              MarkerLayer(markers: _markers),
+            ],
+          ),
         ),
       ],
     );

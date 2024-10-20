@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shoreguard/palette.dart';
 import 'package:shoreguard/screens/homescreen.dart';
 import 'package:shoreguard/screens/loginscreen.dart';
+import 'package:shoreguard/screens/pages/searchpage.dart';
 import 'package:shoreguard/widgets/splash_screen.dart';
 
+import 'Map/beach_state.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -13,7 +16,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp( ChangeNotifierProvider(
+    create: (_) => SearchState(),
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {
