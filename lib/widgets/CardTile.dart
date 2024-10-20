@@ -3,7 +3,7 @@ import 'package:shoreguard/widgets/ocean_score.dart';
 import 'package:shoreguard/oceanmap.dart';
 
 class CardTile extends StatelessWidget {
-  CardTile({super.key});
+  const CardTile({super.key});
 
   @override
   Widget build(BuildContext context) {

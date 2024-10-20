@@ -5,9 +5,9 @@
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
-        android:label="login"
+        android:label="ShoreGuard "
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDlmxUR0Ybt-ePjxXYyxWbzBDyjGnETk3E"/>
         <activity
             android:name=".MainActivity"
