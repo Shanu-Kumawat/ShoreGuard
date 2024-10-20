@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gif/gif.dart';
+import 'package:http/http.dart' as http;
 import 'package:shoreguard/oceanmap.dart';
 import 'package:shoreguard/widgets/ocean_score.dart';
 
@@ -16,15 +20,64 @@ class _HomePageState extends State<HomePage>
   List suitableActivity =
       oceanConditionMap[OceanScore.score]!['suitableActivities'];
   late GifController controller;
+  String locationName = 'Loading...';
+
+  Future<String> getLocationInfo(double latitude, double longitude) async {
+    final url =
+        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude&zoom=18&addressdetails=1';
+
+    final response =
+        await http.get(Uri.parse(url), headers: {'User-Agent': 'ShoreGuard'});
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final address = data['address'];
+
+      if (address.containsKey('beach')) {
+        final beachName = address['beach'] ?? '';
+        final city =
+            address['city'] ?? address['town'] ?? address['village'] ?? '';
+        return '$beachName, $city';
+      } else {
+        final city =
+            address['city'] ?? address['town'] ?? address['village'] ?? '';
+        final country = address['country'] ?? '';
+        return '$city, $country';
+      }
+    } else {
+      return 'Location information not available';
+    }
+  }
 
   @override
   void initState() {
-    print(OceanScore.score);
-    print("Homepage scrore $OceanScore.score");
     super.initState();
+    print(OceanScore.score);
+    print("Homepage score ${OceanScore.score}");
     controller = GifController(vsync: this);
     controller.repeat(
         min: 0, max: 1, period: const Duration(milliseconds: 3000));
+
+    // Call a separate method to handle the asynchronous operations
+    _loadLocationInfo();
+  }
+
+  // New method to handle asynchronous operations
+  void _loadLocationInfo() async {
+    try {
+      Position? position = await _getCurrentLocation();
+      if (position != null) {
+        String location = await getLocationInfo(position.latitude, position.longitude);
+        setState(() {
+          locationName = location;
+        });
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+      setState(() {
+        locationName = 'Unable to get location';
+      });
+    }
   }
 
   @override
@@ -47,7 +100,6 @@ class _HomePageState extends State<HomePage>
           ),
         ),
         // Overlay with semi-transparent background for readability
-
         Container(
           color: Colors.black.withOpacity(0.5),
         ),
@@ -61,10 +113,13 @@ class _HomePageState extends State<HomePage>
                   children: [
                     Icon(Icons.location_on, color: Colors.blue),
                     SizedBox(width: 8),
-                    Text(
-                      'Digha/Kolkata',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        locationName,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -150,6 +205,30 @@ class _HomePageState extends State<HomePage>
           ],
         ),
       ),
+    );
+  }
+
+  Future<Position?> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied. Enable them from settings.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best,
     );
   }
 }
