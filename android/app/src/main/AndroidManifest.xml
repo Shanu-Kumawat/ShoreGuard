@@ -7,7 +7,7 @@
     <application
         android:label="ShoreGuard "
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
 <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDlmxUR0Ybt-ePjxXYyxWbzBDyjGnETk3E"/>
         <activity
             android:name=".MainActivity"
