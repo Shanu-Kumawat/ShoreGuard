@@ -47,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
             waveHeight: waveHeight,
             swellWaveHeight: swellWaveHeight,
             windWaveHeight: windWaveHeight,
-            oceanCurrentVelocity: oceanCurrentVelocity);
+            oceanCurrentVelocity: oceanCurrentVelocity
+        );
       }
     } catch (e) {
       _showLocationPermissionDialog(

@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return; // Login successful
     } on FirebaseAuthException catch (e) {
       print(e.message);
-      throw e; // Rethrow the exception to be caught in the button's onPressed
+      rethrow; // Rethrow the exception to be caught in the button's onPressed
     }
   }
 
