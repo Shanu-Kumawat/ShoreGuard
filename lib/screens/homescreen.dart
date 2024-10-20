@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoreguard/OceanApi/calculate_ocean_condition_score.dart';
 import 'package:shoreguard/OceanApi/services.dart';
 import 'package:shoreguard/screens/pages/alertspage.dart';
 import 'package:shoreguard/screens/pages/homepage.dart';
@@ -37,11 +38,20 @@ class _HomeScreenState extends State<HomeScreen> {
         _currentPosition = position;
       });
       if (position != null) {
-        final oceanData = OceeanInfo(lat: position.latitude, long: position.longitude);
-        print(await oceanData.fetchData()); // Fetch ocean data based on location
+        final oceanData =
+            OceeanInfo(lat: position.latitude, long: position.longitude);
+        print(
+            await oceanData.fetchData()); // Fetch ocean data based on location
+
+        calculateOceanConditionScore(
+            waveHeight: waveHeight,
+            swellWaveHeight: swellWaveHeight,
+            windWaveHeight: windWaveHeight,
+            oceanCurrentVelocity: oceanCurrentVelocity);
       }
     } catch (e) {
-      _showLocationPermissionDialog(e.toString()); // Show a dialog in case of errors
+      _showLocationPermissionDialog(
+          e.toString()); // Show a dialog in case of errors
     }
   }
 
@@ -145,4 +155,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
