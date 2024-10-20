@@ -72,6 +72,9 @@ class _SearchPageState extends State<SearchPage> {
           padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: _searchController,
+            style: TextStyle(
+              color: Colors.black
+            ),
             decoration: InputDecoration(
               hintText: 'Search for a beach...',
               prefixIcon: const Icon(Icons.search),

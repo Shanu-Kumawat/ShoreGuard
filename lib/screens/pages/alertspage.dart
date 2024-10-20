@@ -7,10 +7,10 @@ class AlertsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[900],
+      color: Colors.black,
       child: Expanded(
         child: ListView.builder(
-          itemCount: 10, // Replace with the actual number of items
+          itemCount: 1, // Replace with the actual number of items
           itemBuilder: (context, index) {
             return Container(color: Colors.black, child: Padding(
               padding: const EdgeInsets.all(8.0),
