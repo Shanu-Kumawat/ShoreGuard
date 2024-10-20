@@ -14,7 +14,7 @@ class CardTile extends StatelessWidget {
     return SizedBox(
       width: 300,
       child: Card(
-        color: OceanScore.score < 3 ? Colors.red[500] : Colors.blue,
+        color: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?Colors.grey:Colors.red):Colors.yellowAccent):Colors.lightGreen,
         elevation: 30,
         child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -30,9 +30,7 @@ class CardTile extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: OceanScore.score < 3
-                                ? Icon(Icons.add_alert)
-                                : Icon(Icons.health_and_safety),
+                            child: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?Icon(Icons.sunny):Icon(Icons.dangerous)):Icon(Icons.cloud)):Icon(Icons.waves),
                           ),
                           Text(
                             warning,
@@ -74,12 +72,8 @@ class CardTile extends StatelessWidget {
                           runSpacing: 8,
                           children: activities
                               .map<Widget>((activity) => Chip(
-                                    color: OceanScore.score < 3
-                                        ? WidgetStateProperty.all(Colors.red)
-                                        : WidgetStateProperty.all(Colors.blue),
-                                    side: OceanScore.score < 3
-                                        ? BorderSide(color: Colors.red)
-                                        : BorderSide(color: Colors.blue),
+                                    color: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?WidgetStateProperty.all(Colors.grey):WidgetStateProperty.all(Colors.red)):WidgetStateProperty.all(Colors.yellowAccent)):WidgetStateProperty.all(Colors.lightGreen),
+                                    side: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?BorderSide(color: Colors.grey):BorderSide(color: Colors.red)):BorderSide(color: Colors.limeAccent)):BorderSide(color: Colors.lightGreen),
                                     elevation: 0,
                                     label: Text(
                                       activity,
