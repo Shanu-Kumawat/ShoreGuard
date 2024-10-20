@@ -28,27 +28,28 @@ class OpenStreetMapService {
     final Uri url = Uri.parse('$_baseUrl?q=$query+beach&format=json&limit=10');
 
     try {
-      print('Searching for beaches with query: $query');
-      print('URL: $url');
+      //print('Searching for beaches with query: $query');
+      //print('URL: $url');
 
       final response = await http.get(url, headers: {
         'User-Agent': 'ShoreGuardApp/1.0',
       }).timeout(Duration(seconds: 10));
 
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      //print('Response status code: ${response.statusCode}');
+      //print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        List<Beach> beaches = data.map((place) => Beach.fromJson(place)).toList();
-        print('Found ${beaches.length} beaches');
+        List<Beach> beaches =
+            data.map((place) => Beach.fromJson(place)).toList();
+        //print('Found ${beaches.length} beaches');
         return beaches;
       } else {
-        print('Failed to load beaches: ${response.statusCode}');
+        //print('Failed to load beaches: ${response.statusCode}');
         throw Exception('Failed to load beaches: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error searching beaches: $e');
+      //print('Error searching beaches: $e');
       throw Exception('Error searching beaches: $e');
     }
   }

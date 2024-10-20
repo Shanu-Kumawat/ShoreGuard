@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shoreguard/OceanApi/services.dart';
 import 'package:shoreguard/screens/pages/alertspage.dart';
 import 'package:shoreguard/screens/pages/homepage.dart';
 import 'package:shoreguard/screens/pages/searchpage.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,12 +14,63 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
+  Position? _currentPosition;
+  String locationError = "";
 
   final List<Widget> _page = [
     HomePage(),
     SearchPage(),
     AlertsPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentLocationAndData(); // Start by fetching the location and data
+  }
+
+  // Function to fetch current location and data from OceanInfo
+  Future<void> _fetchCurrentLocationAndData() async {
+    try {
+      Position? position = await _getCurrentLocation();
+      setState(() {
+        _currentPosition = position;
+      });
+      if (position != null) {
+        final oceanData = OceeanInfo(lat: position.latitude, long: position.longitude);
+        print(await oceanData.fetchData()); // Fetch ocean data based on location
+      }
+    } catch (e) {
+      _showLocationPermissionDialog(e.toString()); // Show a dialog in case of errors
+    }
+  }
+
+  // Function to show a popup dialog requesting location access
+  Future<void> _showLocationPermissionDialog(String errorMessage) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Location Permission Required'),
+          content: Text(
+              'This app requires location access to provide relevant data. Please allow location access. Error: $errorMessage'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(), // Close dialog
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close dialog
+                await _fetchCurrentLocationAndData(); // Retry permission request
+              },
+              child: Text('Allow'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +91,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _page[selectedIndex],
+      body: Column(
+        children: [
+          Expanded(child: _page[selectedIndex]),
+          if (locationError.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(locationError, style: TextStyle(color: Colors.red)),
+            ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (index) {
@@ -57,4 +119,30 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}        // Main content
+
+  // Function to get the current location and request permissions if needed
+  Future<Position?> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied. Enable them from settings.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.best),
+    );
+  }
+}
+
