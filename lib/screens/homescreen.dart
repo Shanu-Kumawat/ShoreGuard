@@ -49,15 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
               await fetchData["current"]["wind_wave_height"];
           double oceanCurrentVelocity =
               await fetchData["current"]["ocean_current_velocity"];
-          print("inside not null if and before calculateOceanConditionScore");
           OceanScore.score = await calculateOceanConditionScore(
               waveHeight: waveHeight,
               swellWaveHeight: swellWaveHeight,
               windWaveHeight: windWaveHeight,
               oceanCurrentVelocity: oceanCurrentVelocity);
+        } else {
+          setState(() {
+            OceanScore.score = 1;
+          });
         }
-
-        print("all done");
       }
     } catch (e) {
       print(e);

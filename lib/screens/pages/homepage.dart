@@ -12,13 +12,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  static int score = OceanScore.score; // from Ai Model
-  var conditionDetails = oceanConditionMap[score];
-  List suitableActivity = oceanConditionMap[score]!['suitableActivities'];
+  var conditionDetails = oceanConditionMap[OceanScore.score];
+  List suitableActivity =
+      oceanConditionMap[OceanScore.score]!['suitableActivities'];
   late GifController controller;
 
   @override
   void initState() {
+    print(OceanScore.score);
+    print("Homepage scrore $OceanScore.score");
     super.initState();
     controller = GifController(vsync: this);
     controller.repeat(
@@ -77,18 +79,19 @@ class _HomePageState extends State<HomePage>
                         children: [
                           SizedBox(height: 8),
                           LinearProgressIndicator(
-                            value: score * 0.2,
+                            value: OceanScore.score * 0.2,
                             backgroundColor: Colors.grey[300],
-                            valueColor: AlwaysStoppedAnimation<Color>(score > 3
-                                ? Colors.green
-                                : score > 1
-                                    ? Colors.yellow
-                                    : Colors.red),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                OceanScore.score > 3
+                                    ? Colors.green
+                                    : OceanScore.score > 1
+                                        ? Colors.yellow
+                                        : Colors.red),
                           ),
                           SizedBox(height: 8),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text('$score/5',
+                            child: Text('${OceanScore.score}/5',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],

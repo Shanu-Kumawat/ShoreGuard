@@ -16,7 +16,6 @@ class OceeanInfo {
 
       if (response.statusCode == 200) {
         final Map data = json.decode(response.body);
-        print(data);
         return data;
       } else {
         throw Exception('Failed to load beaches: ${response.statusCode}');
