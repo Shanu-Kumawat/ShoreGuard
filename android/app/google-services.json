@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "923653116855",
+    "project_id": "shoreguard-1ab3e",
+    "storage_bucket": "shoreguard-1ab3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923653116855:android:247438ef130ff7ddb1ce32",
+        "android_client_info": {
+          "package_name": "com.example.login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRRXk158PF2OaCm0-F9vv2I1owuuALqF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
