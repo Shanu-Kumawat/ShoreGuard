@@ -56,11 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               oceanCurrentVelocity: oceanCurrentVelocity);
         } else {
           setState(() {
-<<<<<<< HEAD
             OceanScore.score = 0;
-=======
-            OceanScore.score = 2;
->>>>>>> 218ad3d192394506cceff30b8f031ee14186dd87
           });
         }
       }

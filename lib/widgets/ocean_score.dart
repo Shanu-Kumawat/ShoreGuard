@@ -1,3 +1,3 @@
 class OceanScore {
-  static int score = 5; // Ai model prediction
+  static int score = 0; // Ai model prediction
 }
