@@ -43,7 +43,6 @@ class SearchState extends ChangeNotifier {
   }
 }
 
-
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Beach> _searchResults = [];
@@ -51,6 +50,7 @@ class _SearchPageState extends State<SearchPage> {
   final OpenStreetMapService _mapService = OpenStreetMapService();
   final MapController _mapController = MapController();
   List<Marker> _markers = [];
+  LatLng? _selectedMarkerPosition;
 
   @override
   void initState() {
@@ -76,7 +76,8 @@ class _SearchPageState extends State<SearchPage> {
 
     try {
       final results = await _mapService.searchBeaches(query);
-      Provider.of<SearchState>(context, listen: false).setSearchResults(results);
+      Provider.of<SearchState>(context, listen: false)
+          .setSearchResults(results);
       _updateMapMarkers();
       if (results.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -99,11 +100,18 @@ class _SearchPageState extends State<SearchPage> {
     final searchState = Provider.of<SearchState>(context, listen: false);
     _markers = searchState.searchResults
         .map((beach) => Marker(
-      child: Icon(Icons.location_on, color: Colors.red),
-      width: 80.0,
-      height: 80.0,
-      point: beach.location,
-    ))
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedMarkerPosition = beach.location;
+                  });
+                },
+                child: Icon(Icons.location_on, color: Colors.red),
+              ),
+              width: 80.0,
+              height: 80.0,
+              point: beach.location,
+            ))
         .toList();
 
     if (searchState.searchResults.isNotEmpty) {
@@ -126,9 +134,7 @@ class _SearchPageState extends State<SearchPage> {
             onChanged: (value) {
               searchState.setSearchQuery(value);
             },
-            style: TextStyle(
-              color: Colors.black
-            ),
+            style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: 'Search for a beach...',
               prefixIcon: const Icon(Icons.search),
@@ -160,29 +166,63 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         Expanded(
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: searchState.mapCenter,
-              initialZoom: searchState.mapZoom,
-              onPositionChanged: (position, hasGesture) {
-                if (hasGesture) {
-                  searchState.setMapPosition(
-                    position.center!,
-                    position.zoom!,
-                  );
-                }
-              },
-            ),
+          child: Stack(
             children: [
-              TileLayer(
-                urlTemplate:
-                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: ['a', 'b', 'c'],
-              ),
-              MarkerLayer(markers: _markers),
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : FlutterMap(
+                      mapController: _mapController,
+                      options: MapOptions(
+                        initialCenter: searchState.mapCenter,
+                        initialZoom: searchState.mapZoom,
+                        onPositionChanged: (position, hasGesture) {
+                          if (hasGesture) {
+                            searchState.setMapPosition(
+                              position.center!,
+                              position.zoom!,
+                            );
+                          }
+                        },
+                        onTap: (_, __) {
+                          setState(() {
+                            _selectedMarkerPosition = null;
+                          });
+                        },
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          subdomains: ['a', 'b', 'c'],
+                        ),
+                        MarkerLayer(markers: _markers),
+                      ],
+                    ),
+              if (_selectedMarkerPosition != null)
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'Latitude: ${_selectedMarkerPosition!.latitude.toStringAsFixed(6)}\n'
+                      'Longitude: ${_selectedMarkerPosition!.longitude.toStringAsFixed(6)}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

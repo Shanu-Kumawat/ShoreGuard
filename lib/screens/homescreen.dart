@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               oceanCurrentVelocity: oceanCurrentVelocity);
         } else {
           setState(() {
-            OceanScore.score = 1;
+            OceanScore.score = 0;
           });
         }
       }
