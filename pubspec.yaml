@@ -79,9 +79,7 @@ flutter:
     - assets/images/g_logo.svg
     - assets/Image.jpg
     - assets/google.jpeg
-    - assets/Gif/Level1up.gif
-    - assets/Gif/Level2.gif
-    - assets/Gif/level5.gif
+    - assets/Gif/
     - assets/images/REvan_logo-01.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
