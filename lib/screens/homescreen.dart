@@ -41,17 +41,18 @@ class _HomeScreenState extends State<HomeScreen> {
       if (position != null) {
         final oceanData =
             OceeanInfo(lat: position.latitude, long: position.longitude);
-            Map fetchData=await oceanData.fetchData(); // Fetch ocean data based on location
-            double waveHeight=fetchData["current"]["wave_height"];
-            double swellWaveHeight=fetchData["current"]["swell_wave_height"];
-            double windWaveHeight=fetchData["current"]["wind_wave_height"];
-            double oceanCurrentVelocity=fetchData["current"]["ocean_current_velocity"];
-            OceanScore.score=calculateOceanConditionScore(
-                waveHeight: waveHeight,
-                swellWaveHeight: swellWaveHeight,
-                windWaveHeight: windWaveHeight,
-                oceanCurrentVelocity: oceanCurrentVelocity
-            );
+        Map fetchData =
+            await oceanData.fetchData(); // Fetch ocean data based on location
+        double waveHeight = fetchData["current"]["wave_height"];
+        double swellWaveHeight = fetchData["current"]["swell_wave_height"];
+        double windWaveHeight = fetchData["current"]["wind_wave_height"];
+        double oceanCurrentVelocity =
+            fetchData["current"]["ocean_current_velocity"];
+        OceanScore.score = calculateOceanConditionScore(
+            waveHeight: waveHeight,
+            swellWaveHeight: swellWaveHeight,
+            windWaveHeight: windWaveHeight,
+            oceanCurrentVelocity: oceanCurrentVelocity);
       }
     } catch (e) {
       _showLocationPermissionDialog(
