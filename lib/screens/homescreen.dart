@@ -95,13 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.blue),
+          icon: Icon(Icons.account_circle, color: Colors.blue),
           onPressed: () {},
         ),
         title: Text('ShoreGuard', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle, color: Colors.blue),
+            icon: Icon(Icons.refresh, color: Colors.blue),
             onPressed: () {},
           ),
         ],
