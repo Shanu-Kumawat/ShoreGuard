@@ -41,5 +41,13 @@ Map<int, Map<String, dynamic>> oceanConditionMap = {
     'warnings':
         'Minimal risk, stay hydrated and use sun protection. Be mindful of small kids in the water even under ideal conditions.'
   },
+  0:{
+    'suitableActivities': [
+      'Go Near a Beach'
+    ],
+    'backgroundGifPath': 'assets/Gif/city.gif',
+    'warnings':
+    'No risk.'
+  }
 };
 
