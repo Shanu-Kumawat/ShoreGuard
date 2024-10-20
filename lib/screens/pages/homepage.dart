@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage>
                           SizedBox(height: 8),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text('${OceanScore.score}/5',
+                            child: OceanScore.score==0? Text('-'):Text('${OceanScore.score}/5',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
