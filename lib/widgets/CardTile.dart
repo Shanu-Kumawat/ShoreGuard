@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:shoreguard/widgets/ocean_score.dart';
-import 'package:shoreguard/oceanmap.dart';
+import 'package:shoreguard/datamap.dart';
 
 class CardTile extends StatelessWidget {
   const CardTile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String warning = oceanConditionMap[OceanScore.score]!['warnings'];
+    final String warning = dataMap[OceanScore.score]!['warnings'];
     final List<String> activities =
-        oceanConditionMap[OceanScore.score]!['suitableActivities'];
+        dataMap[OceanScore.score]!['suitableActivities'];
 
     return SizedBox(
       width: 300,
       child: Card(
-        color: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?Colors.grey:Colors.red):Colors.yellowAccent):Colors.lightGreen,
+        color: OceanScore.score <= 3
+            ? (OceanScore.score < 2
+                ? (OceanScore.score == 0 ? Colors.grey : Colors.red)
+                : Colors.yellowAccent)
+            : Colors.lightGreen,
         elevation: 30,
         child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -30,7 +34,13 @@ class CardTile extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?Icon(Icons.sunny):Icon(Icons.dangerous)):Icon(Icons.cloud)):Icon(Icons.waves),
+                            child: OceanScore.score <= 3
+                                ? (OceanScore.score < 2
+                                    ? (OceanScore.score == 0
+                                        ? Icon(Icons.sunny)
+                                        : Icon(Icons.dangerous))
+                                    : Icon(Icons.cloud))
+                                : Icon(Icons.waves),
                           ),
                           Text(
                             warning,
@@ -72,8 +82,25 @@ class CardTile extends StatelessWidget {
                           runSpacing: 8,
                           children: activities
                               .map<Widget>((activity) => Chip(
-                                    color: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?WidgetStateProperty.all(Colors.grey):WidgetStateProperty.all(Colors.red)):WidgetStateProperty.all(Colors.yellowAccent)):WidgetStateProperty.all(Colors.lightGreen),
-                                    side: OceanScore.score <=3 ? (OceanScore.score<2?(OceanScore.score==0?BorderSide(color: Colors.grey):BorderSide(color: Colors.red)):BorderSide(color: Colors.limeAccent)):BorderSide(color: Colors.lightGreen),
+                                    color: OceanScore.score <= 3
+                                        ? (OceanScore.score < 2
+                                            ? (OceanScore.score == 0
+                                                ? WidgetStateProperty.all(
+                                                    Colors.grey)
+                                                : WidgetStateProperty.all(
+                                                    Colors.red))
+                                            : WidgetStateProperty.all(
+                                                Colors.yellowAccent))
+                                        : WidgetStateProperty.all(
+                                            Colors.lightGreen),
+                                    side: OceanScore.score <= 3
+                                        ? (OceanScore.score < 2
+                                            ? (OceanScore.score == 0
+                                                ? BorderSide(color: Colors.grey)
+                                                : BorderSide(color: Colors.red))
+                                            : BorderSide(
+                                                color: Colors.limeAccent))
+                                        : BorderSide(color: Colors.lightGreen),
                                     elevation: 0,
                                     label: Text(
                                       activity,
@@ -93,4 +120,3 @@ class CardTile extends StatelessWidget {
     );
   }
 }
-

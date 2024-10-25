@@ -1,4 +1,4 @@
-int calculateOceanConditionScore({
+int predictOceanConditionScore({
   required double waveHeight,
   required double swellWaveHeight,
   required double windWaveHeight,

@@ -1,11 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class OceeanInfo {
+class OceanData {
   final double lat;
   final double long;
 
-  OceeanInfo({required this.lat, required this.long});
+  OceanData({required this.lat, required this.long});
 
   Future fetchData() async {
     final Uri url = Uri.parse(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shoreguard/Map/services.dart';
+import 'package:shoreguard/OpenStreetMap/services.dart';
 
 class BeachState extends ChangeNotifier {
   Beach? _selectedBeach;
@@ -16,3 +16,4 @@ class BeachState extends ChangeNotifier {
     notifyListeners();
   }
 }
+

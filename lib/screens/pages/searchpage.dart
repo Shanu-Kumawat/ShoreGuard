@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:shoreguard/Map/services.dart';
+import 'package:shoreguard/OpenStreetMap/services.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -230,4 +230,3 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-

@@ -1,4 +1,4 @@
-Map<int, Map<String, dynamic>> oceanConditionMap = {
+Map<int, Map<String, dynamic>> dataMap = {
   1: {
     'suitableActivities': ['Avoid any outdoor activities near the ocean'],
     'backgroundGifPath': 'assets/Gif/level1.gif',
@@ -41,13 +41,9 @@ Map<int, Map<String, dynamic>> oceanConditionMap = {
     'warnings':
         'Minimal risk, stay hydrated and use sun protection. Be mindful of small kids in the water even under ideal conditions.'
   },
-  0:{
-    'suitableActivities': [
-      'Go Near a Beach'
-    ],
+  0: {
+    'suitableActivities': ['Go Near a Beach'],
     'backgroundGifPath': 'assets/Gif/city.gif',
-    'warnings':
-    'No risk.'
+    'warnings': 'No risk.'
   }
 };
-
