@@ -178,8 +178,8 @@ class _SearchPageState extends State<SearchPage> {
                         onPositionChanged: (position, hasGesture) {
                           if (hasGesture) {
                             searchState.setMapPosition(
-                              position.center!,
-                              position.zoom!,
+                              position.center,
+                              position.zoom,
                             );
                           }
                         },

@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shoreguard/Location/coordinates.dart';
 import 'package:shoreguard/OceanApi/predict_ocean_condition_score.dart';
 import 'package:shoreguard/OceanApi/services.dart';
-import '../widgets/ocean_score.dart';
+import '../ocean_score.dart';
 
 Future<void> fetchCurrentLocationAndData() async {
   try {

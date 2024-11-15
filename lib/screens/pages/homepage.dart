@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'package:shoreguard/Location/address.dart';
 import 'package:shoreguard/Location/coordinates.dart';
 import 'package:shoreguard/OceanApi/current_ocean_data.dart';
 import 'package:shoreguard/datamap.dart';
-import 'package:shoreguard/widgets/ocean_score.dart';
+import 'package:shoreguard/ocean_score.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

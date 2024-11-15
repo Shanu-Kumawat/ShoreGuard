@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shoreguard/widgets/ocean_score.dart';
+import 'package:shoreguard/ocean_score.dart';
 import 'package:shoreguard/datamap.dart';
 
 class CardTile extends StatelessWidget {
