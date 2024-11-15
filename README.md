@@ -16,6 +16,11 @@ Clone the repo then inside ShoreGuard folder use
 flutter run
 ```
 
+## Features
+- 🌐 **Real-time data** powered by Open-Meteo
+- 🔍 **Search functionality** to find information for any location
+- 🔔 **Alerts and notifications** for critical updates
+
 # App Screenshots
 
 Here are some screenshots of our app to showcase its features and interface.
